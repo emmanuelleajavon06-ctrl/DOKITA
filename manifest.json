@@ -1,0 +1,2 @@
+{ "name": "SamaDokita", "short_name": "SamaDokita", "description": "Votre santé, partout avec vous", "start_url": "/", "display": "standalone",
+  "background_color": "#ffffff", "theme_color": "#0B4B75", "icons": [{ "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }] }

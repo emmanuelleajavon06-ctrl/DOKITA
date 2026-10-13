@@ -1,0 +1,34 @@
+# Démo SamaDokita sur Render : base PostgreSQL + API NestJS + site Next.js.
+databases:
+  - name: samadokita-db
+    databaseName: samadokita
+    plan: free # la base gratuite expire après 30 jours : passer à un plan payant pour garder les données
+
+services:
+  - type: web
+    name: samadokita-api
+    runtime: docker
+    rootDir: backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - { key: DATABASE_URL, fromDatabase: { name: samadokita-db, property: connectionString } }
+      - { key: JWT_ACCESS_SECRET, generateValue: true }
+      - { key: NODE_ENV, value: production }
+      - { key: COOKIE_PATH, value: /api/auth }
+      - { key: TRUST_PROXY_HOPS, value: "3" }
+      - { key: SEED_DEMO, value: "true" } # crée les comptes de DÉMO au 1er démarrage. Mettre "false" ensuite.
+      # Photos (optionnel) : stockage compatible S3 à bucket public (Cloudflare R2, AWS S3, Supabase...)
+      - { key: S3_ENDPOINT, sync: false }
+      - { key: S3_ACCESS_KEY, sync: false }
+      - { key: S3_SECRET_KEY, sync: false }
+      - { key: S3_BUCKET, sync: false }
+      - { key: S3_PUBLIC_URL, sync: false }
+
+  - type: web
+    name: samadokita-web
+    runtime: docker
+    rootDir: frontend
+    plan: free
+    envVars:
+      - { key: API_URL, sync: false } # URL publique de samadokita-api, ex : https://samadokita-api-xxxx.onrender.com
